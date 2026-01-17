@@ -56,8 +56,8 @@ public class EventView {
                     if(searchOpt.equals("1")){
                         String code = InputUtil.getText("Enter Event Code : ");
                         try {
-                            List<Event> event = eventService.searchEventByCode(code);
-                            ViewUtil.printEventDetail(event);
+                            Event event = eventService.searchEventByCode(code);
+                            ViewUtil.printEventDetailNotList(event);
                         }catch (RuntimeException e){
                             ViewUtil.printHeader(e.getMessage());
                         }
@@ -137,7 +137,7 @@ public class EventView {
                     LocalDate endDate = null;
                     while (endDate == null) {
                         String input = InputUtil.getText(
-                                "Event Start Date (yyyy-MM-dd) : "
+                                "Event End Date (yyyy-MM-dd) : "
                         );
 
                         try {
@@ -178,7 +178,7 @@ public class EventView {
                     }
                 }
                 case "4" : {
-                  try {
+//                  try {
                       ViewUtil.printHeader("Update Event");
                       String code = InputUtil.getText("Enter Event Code : ");
 
@@ -187,59 +187,88 @@ public class EventView {
                           break;
                       }
 
-                      String name = InputUtil.getText("Event Name : ");
+                      String name = InputUtil.getText("Event Name [0 To Skip] : ");
+                      if(name.equals("0")){
+                          name=null;
+                      }
+
+
                       ViewUtil.printEnumType();
-                      String eventType = String.valueOf(InputUtil.getTextWithEnum(EventType.class,"Enter Event Type : "));
+                      EventType eventType = InputUtil.getTextWithEnum(EventType.class,"Enter Event Type [0 To Skip] : ");
+
                       LocalDate startDate = null;
-                      while (startDate == null) {
+                      while (true) {
                           String input = InputUtil.getText(
-                                  "Event Start Date (yyyy-MM-dd) : "
+                                  "Event Start Date (yyyy-MM-dd) [0 To Skip]  : "
                           );
 
                           try {
+                              if(input.equals("0")){
+                                  break;
+                              }
+
                               startDate = LocalDate.parse(input, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                              break;
                           } catch (DateTimeParseException e) {
                               System.out.println("Invalid date. Example: 2999-12-02");
                           }
                       }
 
                       LocalDate endDate = null;
-                      while (endDate == null) {
+                      while (true) {
                           String input = InputUtil.getText(
-                                  "Event Start Date (yyyy-MM-dd) : "
+                                  "Event End Date (yyyy-MM-dd) [0 To Skip] : "
                           );
 
                           try {
+                              if(input.equals("0")){
+                                break;
+                              }
+
                               endDate = LocalDate.parse(input, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                                break;
                           } catch (DateTimeParseException e) {
                               System.out.println("Invalid date. Example: 2999-12-02");
                           }
                       }
 
-                      String location = InputUtil.getText("Enter Location : ");
-                      String organizerName = InputUtil.getText("Enter Organizer Name : ");
-                      String description = InputUtil.getText("Enter Event Description : ");
-
+                      String location = InputUtil.getText("Enter Location  [0 To Skip] : ");
+                      if(location.equals("0")){
+                          location=null;
+                      }
+                      String organizerName = InputUtil.getText("Enter Organizer Name [0 To Skip] : ");
+                      if(organizerName.equals("0")){
+                          organizerName=null;
+                      }
+                      String description = InputUtil.getText("Enter Event Description [0 To Skip] : ");
+                      if(description.equals("0")){
+                          description=null;
+                      }
                       ViewUtil.printEnumStatus();
-                      String eventStatus = String.valueOf(InputUtil.getTextWithEnum(EventStatus.class,"Enter Event Status : "));
+                      EventStatus eventStatus = InputUtil.getTextWithEnum(EventStatus.class,"Enter Event Status [0 To Skip] : ");
 
-                      Integer maxParticipant = InputUtil.getIntegerMoreThanZero("Enter Max Participant : ");
 
+
+
+                      Integer maxParticipant = InputUtil.getIntegerMoreThanZero("Enter Max Participant [0 To Skip] : ");
+                      if(maxParticipant.equals(0)){
+                          maxParticipant=null;
+                      }
                       Event event = Event.builder()
                               .eventCode(code)
                               .eventName(name)
-                              .eventType(EventType.valueOf(eventType.toUpperCase()))
+                              .eventType(eventType)
                               .startDate(startDate)
                               .endDate(endDate)
                               .location(location)
                               .organizerName(organizerName)
                               .description(description)
-                              .status(EventStatus.valueOf(eventStatus))
+                              .status(eventStatus)
                               .maxParticipant(maxParticipant).build();
-                      eventService.updateEvent(event);
-                  }catch (RuntimeException e){
-                      ViewUtil.printHeader(e.getMessage());
-                  }
+                      eventService.updateEvent(code,event);
+//                  }catch (RuntimeException e){
+//                      ViewUtil.printHeader(e.getMessage());
+//                  }
                   break;
                 }
                 case "5" : {

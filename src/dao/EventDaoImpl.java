@@ -67,18 +67,16 @@ public class EventDaoImpl implements EventDao{
     }
 
     @Override
-    public  List<Event> searchEventByCode(String code) throws SQLException {
+    public  Event searchEventByCode(String code) throws SQLException {
         String SQL = """
                 SELECT * FROM event WHERE event_code = ?
                 """;
         PreparedStatement pstm = conn.prepareStatement(SQL);
         pstm.setString(1,code);
         ResultSet rs = pstm.executeQuery();
-        List<Event> events = new ArrayList<>();
         if(rs.next()){
             Event event = retreive(rs);
-            events.add(event);
-            return events;
+            return event;
         }else {
             return null;
         }

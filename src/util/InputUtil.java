@@ -15,7 +15,9 @@ public class InputUtil {
         while (true) {
             ViewUtil.print(label + " -> ", false);
             String input = scanner.nextLine();
-
+            if (input.equals("0")) {
+                return null; //test
+            }
             if (input.isEmpty()) {
                 ViewUtil.printHeader("Invalid option.");
                 continue;
@@ -58,6 +60,9 @@ public class InputUtil {
             try {
 
                 Integer integer = Integer.parseInt(scanner.nextLine());
+                if(integer == 0 ){
+                    return 0;
+                }
                 if (integer > 0){
                   return integer;
                 }else {

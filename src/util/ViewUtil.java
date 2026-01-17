@@ -150,6 +150,42 @@ public class ViewUtil {
     }
 
 
+    public static void printEventDetailNotList(Event event) {
+        // 1. Create table with 6 columns and border style
+        Table table = new Table(11, BorderStyle.UNICODE_ROUND_BOX_WIDE);
+
+        // 2. Add table header
+        table.addCell("ID");
+        table.addCell("CODE");
+        table.addCell("NAME");
+        table.addCell("TYPE");
+        table.addCell("START DATE");
+        table.addCell("END DATE");
+        table.addCell("LOCATION");
+        table.addCell("ORGANIZER NAME");
+        table.addCell("DESCRIPTION");
+        table.addCell("STATUS");
+        table.addCell("MAX PARTICIPANT");
+
+
+        // 3. Add table data
+
+            table.addCell(event.getId().toString());
+            table.addCell(event.getEventCode());
+            table.addCell(event.getEventName());
+            table.addCell(event.getEventType().toString());
+            table.addCell(event.getStartDate().toString());
+            table.addCell(event.getEndDate().toString());
+            table.addCell(event.getLocation());
+            table.addCell(event.getOrganizerName());
+            table.addCell(event.getDescription());
+            table.addCell(event.getStatus().toString());
+            table.addCell(event.getMaxParticipant().toString());
+        // 4. Render table
+        print(table.render(), true);
+    }
+
+
     public static void printEnumStatus(){
 
         ViewUtil.printHeader("Event Status");

@@ -36,13 +36,13 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> searchEventByCode(String code) {
+    public Event searchEventByCode(String code) {
        try {
-           List<Event> events = eventDao.searchEventByCode(code);
-           if(events==null){
+           Event event = eventDao.searchEventByCode(code);
+           if(event==null){
                throw new RuntimeException("Event doesn't Exist ! ");
            }
-           return events;
+           return event;
        }catch (SQLException e){
             throw new RuntimeException(e);
        }
@@ -76,9 +76,40 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public void updateEvent( Event event) {
+    public void updateEvent( String code, Event event) {
         try {
-            if(eventDao.updateEvent(event)){
+            Event ev = searchEventByCode(code);
+            if(event.getEventName()!=null){
+                ev.setEventName(event.getEventName());
+            }
+            if(event.getEventType()!=null){
+                ev.setEventType(event.getEventType());
+            }
+            if(event.getStartDate()!=null){
+                ev.setStartDate(event.getStartDate());
+            }
+            if(event.getEndDate()!=null){
+                ev.setEndDate(event.getEndDate());
+            }
+            if(event.getLocation()!=null){
+                ev.setLocation(event.getLocation());
+            }
+            if(event.getOrganizerName()!=null){
+                ev.setOrganizerName(event.getOrganizerName());
+            }
+            if(event.getDescription()!=null){
+                ev.setDescription(event.getDescription());
+            }
+            if(event.getStatus()!=null){
+                ev.setStatus(event.getStatus());
+            }
+            if(event.getMaxParticipant()!=null){
+                ev.setMaxParticipant(event.getMaxParticipant());
+            }
+
+
+
+            if(eventDao.updateEvent(ev)){
                 ViewUtil.printHeader("Event Code [ " + event.getEventCode() + " ] Updated Successfully!");
             }
         }catch (SQLException e){

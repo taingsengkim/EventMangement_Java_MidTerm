@@ -10,10 +10,10 @@ import java.util.List;
 public interface EventService {
     List<Event> getAllEvent(int pageNumber, int pageSize);
     void addEvent(Event event);
-    List<Event> searchEventByCode(String code);
+    Event searchEventByCode(String code);
     List<Event> searchEventByName(String name);
     List<Event> searchEventByType(String type);
     List<Event> searchEventByStartedDate(LocalDate date);
-    void updateEvent(Event event);
+    void updateEvent(String code, Event event);
     void deleteEvent(String code);
 }
