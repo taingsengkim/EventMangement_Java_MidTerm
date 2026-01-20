@@ -49,6 +49,19 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public Event searchEventById(Integer id) {
+        try {
+            Event event = eventDao.searchEventByID(id);
+            if(event==null){
+                throw new RuntimeException("Event doesn't Exist ! ");
+            }
+            return event;
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public Event searchEventByCodeForAdd(String code) {
         try {
             return eventDao.searchEventByCode(code);

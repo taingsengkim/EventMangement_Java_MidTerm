@@ -83,6 +83,22 @@ public class EventDaoImpl implements EventDao{
     }
 
     @Override
+    public Event searchEventByID(Integer id) throws SQLException {
+        String SQL = """
+                SELECT * FROM event WHERE id = ?
+                """;
+        PreparedStatement pstm = conn.prepareStatement(SQL);
+        pstm.setInt(1,id);
+        ResultSet rs = pstm.executeQuery();
+        if(rs.next()){
+            Event event = retreive(rs);
+            return event;
+        }else {
+            return null;
+        }
+    }
+
+    @Override
     public  List<Event> searchEventByName(String name) throws SQLException {
         String SQL = """
                 SELECT * FROM event WHERE event_name ILIKE ?

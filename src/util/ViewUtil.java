@@ -3,11 +3,14 @@ package util;
 
 import model.Event;
 import model.Participant;
+import model.enums.AttendanceStatus;
 import model.enums.EventStatus;
 import model.enums.EventType;
 import org.nocrala.tools.texttablefmt.BorderStyle;
 import org.nocrala.tools.texttablefmt.CellStyle;
 import org.nocrala.tools.texttablefmt.Table;
+import service.EventService;
+import service.EventServiceImpl;
 
 import java.util.List;
 
@@ -64,7 +67,7 @@ public class ViewUtil {
         table.setColumnWidth(0, 50, 100);
         table.addCell("Participant Menu", cellStyle);
         table.addCell("1)List All  2)Search  3)Add new  4)Update", cellStyle);
-        table.addCell("5)Delete  0)Exit", cellStyle);
+        table.addCell("5)Delete 7) Mark Attended 0)Exit", cellStyle);
         print(table.render(), true);
     }
 
@@ -205,6 +208,48 @@ public class ViewUtil {
             System.out.println(e);
         }
 
+    }
+
+    public static void printEnumAttended(){
+
+        ViewUtil.printHeader("Attendance Type");
+
+        for(AttendanceStatus e : AttendanceStatus.values()){
+            System.out.println(e);
+        }
+
+    }
+    public static void printParticipant(List<Participant> participantList) {
+        // 1. Create table with 6 columns and border style
+        Table table = new Table(9, BorderStyle.UNICODE_ROUND_BOX_WIDE);
+
+        // 2. Add table header
+        table.addCell("CODE");
+        table.addCell("FULL NAME");
+        table.addCell("GENDER");
+        table.addCell("ROLE");
+        table.addCell("EMAIL");
+        table.addCell("PHONE");
+        table.addCell("EVENT");
+        table.addCell("PAYMENT STATUS");
+        table.addCell("ATTENDANCE");
+
+        EventService eventService = new EventServiceImpl();
+        // 3. Add table data
+        for (Participant participant : participantList) {
+            table.addCell(participant.getParticipantCode());
+            table.addCell(participant.getFullName());
+            table.addCell(participant.getGender().toString());
+            table.addCell(participant.getRole());
+            table.addCell(participant.getPhone());
+            table.addCell(participant.getEmail());
+            table.addCell(eventService.searchEventById(participant.getEventId()).getEventName());
+//            table.addCell(participant.getEventId().toString());
+            table.addCell(participant.getPaymentStatus().toString());
+            table.addCell(participant.getIsAttended().toString());
+        }
+        // 4. Render table
+        print(table.render(), true);
     }
 
 

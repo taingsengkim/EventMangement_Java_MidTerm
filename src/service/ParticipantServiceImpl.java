@@ -26,4 +26,29 @@ public class ParticipantServiceImpl implements ParticipantService{
             throw new RuntimeException(e);
         }
     }
+
+
+    @Override
+    public boolean markAttended(String attende, String code) {
+        try {
+            if(participantDao.findParticipantByCode(code)!=null){
+                return participantDao.markAttended(attende,code);
+            }
+            throw new RuntimeException("Participant Code Doesn't Exist !");
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean findParticipantByCode(String code) {
+        try {
+            if(participantDao.findParticipantByCode(code) != null){
+                return true;
+            }
+            throw new RuntimeException("Participant Code Doesn't Exist !");
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
 }

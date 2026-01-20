@@ -57,6 +57,43 @@ public class ParticipantDaoImpl implements ParticipantDao{
         return pstm.executeUpdate()>0;
     }
 
+    @Override
+    public boolean markAttended(String attended ,String code) throws SQLException {
+        String SQL = """
+                UPDATE participant SET is_attended = ? WHERE participant_code =?
+                """;
+        PreparedStatement pstm = conn.prepareStatement(SQL);
+        pstm.setString(1,attended);
+        pstm.setString(2,code);
+        return pstm.executeUpdate()>0;
+    }
+
+    @Override
+    public boolean payEvent(String payType, String code) throws SQLException {
+        String SQL = """
+                UPDATE participant SET payment_status = ? WHERE participant_code =?
+                """;
+        PreparedStatement pstm = conn.prepareStatement(SQL);
+        pstm.setString(1,payType);
+        pstm.setString(2,code);
+        return pstm.executeUpdate()>0;
+    }
+
+    @Override
+    public Participant findParticipantByCode(String code) throws SQLException {
+        String SQL = """
+                SELECT * FROM participant WHERE participant_code = ?
+                """;
+        PreparedStatement pstm = conn.prepareStatement(SQL);
+        pstm.setString(1,code);
+        ResultSet rs = pstm.executeQuery();
+        if(rs.next()){
+            Participant participant = retreive(rs);
+            return participant;
+        }
+        return null;
+    }
+
 
     public static Participant retreive(ResultSet rs) throws SQLException {
         Participant participant = Participant.builder().

@@ -11,6 +11,7 @@ public interface EventService {
     List<Event> getAllEvent(int pageNumber, int pageSize);
     void addEvent(Event event);
     Event searchEventByCode(String code);
+    Event searchEventById(Integer id);
     List<Event> searchEventByName(String name);
     List<Event> searchEventByType(String type);
     List<Event> searchEventByStartedDate(LocalDate date);

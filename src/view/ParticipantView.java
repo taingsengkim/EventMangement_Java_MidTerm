@@ -30,7 +30,7 @@ public class ParticipantView {
                     Scanner sc = new Scanner(System.in);
                     while (true){
                         List<Participant> participants = participantService.getAllParticipants(pageNumber,pageSize);
-                        ViewUtil.printParticipantDetail(participants);
+                        ViewUtil.printParticipant(participants);
 
                         System.out.println("\nOptions: N = Next, P = Previous, Q = Quit");
                         String input = sc.nextLine().trim().toUpperCase();
@@ -45,6 +45,9 @@ public class ParticipantView {
                             System.out.println("Invalid option.");
                         }
                     }
+                    break;
+                }
+                case "2":{
                     break;
                 }
                 case "3":{
@@ -88,7 +91,7 @@ public class ParticipantView {
                     }
 
 
-                    String paymentStatus = String.valueOf(InputUtil.getTextWithEnum(PaymentStatus.class,"Enter Participant Gender : "));
+                    String paymentStatus = String.valueOf(InputUtil.getTextWithEnum(PaymentStatus.class,"Enter Payment Status : "));
                     String remarks = InputUtil.getText("Enter Remarks : ");
                     String isAttend = AttendanceStatus.PENDING.toString();
 
@@ -108,6 +111,23 @@ public class ParticipantView {
                             .build();
 
                     participantService.addParticipant(participant);
+                    break;
+                }
+                case "7":{
+//                   try {
+                       ViewUtil.printHeader("Mark Attending");
+                       String code = InputUtil.getText("Enter Participant Code : ");
+                       if(!participantService.findParticipantByCode(code)){
+                           return;
+                       }
+                       ViewUtil.printEnumAttended();
+                       String att = String.valueOf(InputUtil.getTextWithEnum(AttendanceStatus.class,"Enter Attended Status : "));
+                        if(participantService.markAttended(att,code)){
+                            ViewUtil.printHeader("Marked Attendance : " + att  + " Successfully! ");
+                        }
+                       //                   }catch (RuntimeException e){
+//                       ViewUtil.printHeader(e.getMessage());
+//                   }
                     break;
                 }
                 case "0": return;
