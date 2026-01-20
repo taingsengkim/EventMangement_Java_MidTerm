@@ -1,0 +1,120 @@
+package view;
+
+import model.Event;
+import model.Participant;
+import model.enums.AttendanceStatus;
+import model.enums.EventType;
+import model.enums.Gender;
+import model.enums.PaymentStatus;
+import service.EventService;
+import service.ParticipantService;
+import util.InputUtil;
+import util.ViewUtil;
+
+import java.awt.image.SinglePixelPackedSampleModel;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.List;
+import java.util.Scanner;
+
+public class ParticipantView {
+    public void participantViewMenu(EventService eventService , ParticipantService participantService){
+        do {
+            ViewUtil.printMenuParticipant();
+            String participantOpt = InputUtil.getText("Enter Option : ");
+            switch (participantOpt){
+                case "1":{
+                    int pageNumber = 1;
+                    int pageSize = 5;
+                    Scanner sc = new Scanner(System.in);
+                    while (true){
+                        List<Participant> participants = participantService.getAllParticipants(pageNumber,pageSize);
+                        ViewUtil.printParticipantDetail(participants);
+
+                        System.out.println("\nOptions: N = Next, P = Previous, Q = Quit");
+                        String input = sc.nextLine().trim().toUpperCase();
+
+                        if (input.equals("N")) {
+                            pageNumber++;
+                        } else if (input.equals("P") && pageNumber > 1) {
+                            pageNumber--;
+                        } else if (input.equals("Q")) {
+                            break;
+                        } else {
+                            System.out.println("Invalid option.");
+                        }
+                    }
+                    break;
+                }
+                case "3":{
+                    ViewUtil.printHeader("Register New Participant");
+                    EventView.getEvent(eventService);
+                    Integer id = null;
+                    try {
+                        String eventCode = InputUtil.getText("Enter Event Code : ");
+                        id =eventService.searchEventByCode(eventCode).getId();
+
+                    }catch (RuntimeException e){
+                        ViewUtil.printHeader(e.getMessage());
+                    }
+                    if(id==null){
+                        break;
+                    }
+                    String code = InputUtil.getText("Enter Participant Code : ");
+                    String fullName = InputUtil.getText("Enter Participant Name : ");
+                    String gender = String.valueOf(InputUtil.getTextWithEnum(Gender.class,"Enter Participant Gender : "));
+                    String address = InputUtil.getText("Enter Participant Address : ");
+                    String role = InputUtil.getText("Enter Participant Role : ");
+                    String email = InputUtil.getText("Enter Email : ");
+                    String phone = InputUtil.getText("Enter Phone Number : ");
+
+                    LocalDate registrationDate = null;
+                    while (true) {
+                        String input = InputUtil.getText(
+                                "Event Registration Date (yyyy-MM-dd) [0 To Skip]  : "
+                        );
+
+                        try {
+                            if(input.equals("0")){
+                                break;
+                            }
+
+                            registrationDate = LocalDate.parse(input, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                            break;
+                        } catch (DateTimeParseException e) {
+                            System.out.println("Invalid date. Example: 2999-12-02");
+                        }
+                    }
+
+
+                    String paymentStatus = String.valueOf(InputUtil.getTextWithEnum(PaymentStatus.class,"Enter Participant Gender : "));
+                    String remarks = InputUtil.getText("Enter Remarks : ");
+                    String isAttend = AttendanceStatus.PENDING.toString();
+
+                    Participant participant = Participant.builder()
+                            .participantCode(code)
+                            .fullName(fullName)
+                            .gender(Gender.valueOf(gender))
+                            .address(address)
+                            .role(role)
+                            .email(email)
+                            .phone(phone)
+                            .eventId(id)
+                            .registrationDate(registrationDate)
+                            .paymentStatus(PaymentStatus.valueOf(paymentStatus))
+                            .remarks(remarks)
+                            .isAttended(AttendanceStatus.valueOf(isAttend))
+                            .build();
+
+                    participantService.addParticipant(participant);
+                    break;
+                }
+                case "0": return;
+            }
+        }while (true);
+    }
+
+
+
+}

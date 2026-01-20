@@ -16,4 +16,6 @@ public interface EventService {
     List<Event> searchEventByStartedDate(LocalDate date);
     void updateEvent(String code, Event event);
     void deleteEvent(String code);
-}
+    Event searchEventByCodeForAdd(String code) ;
+
+    }

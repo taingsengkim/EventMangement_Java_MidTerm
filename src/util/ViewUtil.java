@@ -2,6 +2,7 @@ package util;
 
 
 import model.Event;
+import model.Participant;
 import model.enums.EventStatus;
 import model.enums.EventType;
 import org.nocrala.tools.texttablefmt.BorderStyle;
@@ -204,6 +205,47 @@ public class ViewUtil {
             System.out.println(e);
         }
 
+    }
+
+
+    public static void printParticipantDetail(List<Participant> participantList) {
+        // 1. Create table with 6 columns and border style
+        Table table = new Table(13, BorderStyle.UNICODE_ROUND_BOX_WIDE);
+
+        // 2. Add table header
+        table.addCell("ID");
+        table.addCell("CODE");
+        table.addCell("FULL NAME");
+        table.addCell("GENDER");
+        table.addCell("ADDRESS");
+        table.addCell("ROLE");
+        table.addCell("EMAIL");
+        table.addCell("PHONE");
+        table.addCell("EVENT");
+        table.addCell("REGISTRATION DATE");
+        table.addCell("PAYMENT STATUS");
+        table.addCell("REMARKS");
+        table.addCell("ATTENDANCE");
+
+
+        // 3. Add table data
+        for (Participant participant : participantList) {
+            table.addCell(participant.getId().toString());
+            table.addCell(participant.getParticipantCode());
+            table.addCell(participant.getFullName());
+            table.addCell(participant.getGender().toString());
+            table.addCell(participant.getAddress());
+            table.addCell(participant.getRole());
+            table.addCell(participant.getEmail());
+            table.addCell(participant.getPhone());
+            table.addCell(participant.getEventId().toString());
+            table.addCell(participant.getRegistrationDate().toString());
+            table.addCell(participant.getPaymentStatus().toString());
+            table.addCell(participant.getRemarks());
+            table.addCell(participant.getIsAttended().toString());
+        }
+        // 4. Render table
+        print(table.render(), true);
     }
 
 

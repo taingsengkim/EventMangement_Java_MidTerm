@@ -26,28 +26,7 @@ public class EventView {
             String eventOpt = InputUtil.getText("Enter Option : ");
             switch (eventOpt){
                 case "1": {
-                    int pageNumber = 1;
-                    int pageSize = 5;
-                    Scanner sc = new Scanner(System.in);
-
-                    while (true) {
-                        List<Event> eventsPage = eventService.getAllEvent(pageNumber, pageSize);
-                        ViewUtil.printEventList(eventsPage);
-
-                        System.out.println("\nOptions: N = Next, P = Previous, Q = Quit");
-                        String input = sc.nextLine().trim().toUpperCase();
-
-                        if (input.equals("N")) {
-                            pageNumber++;
-                        } else if (input.equals("P") && pageNumber > 1) {
-                            pageNumber--;
-                        } else if (input.equals("Q")) {
-                            break;
-                        } else {
-                            System.out.println("Invalid option.");
-                        }
-                    }
-
+                   getEvent(eventService);
                     break;
                 }
                 case "2":{
@@ -106,10 +85,12 @@ public class EventView {
 
                     ViewUtil.printHeader("Add New Event");
                     String code = InputUtil.getText("Event Code : ");
+
+                    if(eventService.searchEventByCodeForAdd(code) != null){
+                        ViewUtil.printHeader("Event Code Already Exist !");
+                        break;
+                    }
                     String name = InputUtil.getText("Event Name : ");
-
-
-
                     ViewUtil.printEnumType();
 //                    String eventType = InputUtil.getText("Event Type : ");
                     String eventType = String.valueOf(InputUtil.getTextWithEnum(EventType.class,"Enter Event Type : "));
@@ -178,7 +159,7 @@ public class EventView {
                     }
                 }
                 case "4" : {
-//                  try {
+                  try {
                       ViewUtil.printHeader("Update Event");
                       String code = InputUtil.getText("Enter Event Code : ");
 
@@ -266,9 +247,9 @@ public class EventView {
                               .status(eventStatus)
                               .maxParticipant(maxParticipant).build();
                       eventService.updateEvent(code,event);
-//                  }catch (RuntimeException e){
-//                      ViewUtil.printHeader(e.getMessage());
-//                  }
+                  }catch (RuntimeException e){
+                      ViewUtil.printHeader(e.getMessage());
+                  }
                   break;
                 }
                 case "5" : {
@@ -284,5 +265,28 @@ public class EventView {
                 case "0":return;
             }
         }while (true);
+    }
+    public static void getEvent(EventService eventService){
+        int pageNumber = 1;
+        int pageSize = 5;
+        Scanner sc = new Scanner(System.in);
+
+        while (true) {
+            List<Event> eventsPage = eventService.getAllEvent(pageNumber, pageSize);
+            ViewUtil.printEventList(eventsPage);
+
+            System.out.println("\nOptions: N = Next, P = Previous, Q = Quit");
+            String input = sc.nextLine().trim().toUpperCase();
+
+            if (input.equals("N")) {
+                pageNumber++;
+            } else if (input.equals("P") && pageNumber > 1) {
+                pageNumber--;
+            } else if (input.equals("Q")) {
+                break;
+            } else {
+                System.out.println("Invalid option.");
+            }
+        }
     }
 }

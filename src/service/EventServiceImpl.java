@@ -49,6 +49,16 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public Event searchEventByCodeForAdd(String code) {
+        try {
+            return eventDao.searchEventByCode(code);
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    @Override
     public List<Event> searchEventByName(String name) {
         try {
             return eventDao.searchEventByName(name);

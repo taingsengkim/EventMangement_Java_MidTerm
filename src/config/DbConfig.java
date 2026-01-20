@@ -9,6 +9,7 @@ public class DbConfig {
     public static Connection getInstace(){
         return conn;
     }
+
     public static void init (){
         if(conn == null){
             try {
