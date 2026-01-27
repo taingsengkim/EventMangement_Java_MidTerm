@@ -33,7 +33,7 @@ create table participant
     address            varchar(100),
     role               varchar(50),
     email              varchar(50),
-    phone              varchar(20)  not null,
+    phone              varchar(20)  not null unique,
     event_id           integer      not null
         references event,
     registeration_date date         not null,
